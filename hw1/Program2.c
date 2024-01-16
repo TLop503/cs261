@@ -69,12 +69,12 @@ void summary(struct student* students){
 	}
 	a = a / 10;
 	printf("Lowest Score: %d by student %c%c.\nHighest Score: %d by student %c%c.\nAverage Score: %f.\n",
-			hscore,
-			students[hstud].initials[0],
-			students[hstud].initials[1],
 			lscore,
 			students[lstud].initials[0],
-			students[lstud].initials[0],
+			students[lstud].initials[1],
+			hscore,
+			students[hstud].initials[0],
+			students[hstud].initials[0],
 			a
 	      );
 			
