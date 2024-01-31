@@ -1,0 +1,1 @@
+general idea: load brackets into a stack. have the active innermost bracket be up via readstack. when closing bracket is found pop stack. if size after doing this is not 0 then the stack is imbalanced.
