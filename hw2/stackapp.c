@@ -46,12 +46,34 @@ int isBalanced(char* s)
 		while(1) /*infinite loop that has to be stopped explicitly*/
 		{
 			ch = nextChar(s); /*get the next character in the string*/
-			
+			if (ch == '(' || ch == '{' || ch == '[') {
+				pushDynArr(stack, ch);
+				ch = nextChar(s);
+			}
+			if (ch == ')' || ch == '}' || ch == ']') {
+				if (stack->size == 0) {
+					b = 0;
+					break;
+					/*if closing bracket without opener exists exit loop */
+				}
+				ts = topDynArr(stack);
+				
+				/* If pair is found */
+				if ((ch == ')' && ts == '(') || (ch == '}' && ts == '{') || (ch == ']' && ts == '[')) {
+					popDynArr(stack);
+				}
+				/* otherwise add to stack */
+				else {
+					pushDynArr(stack, ch);
+				}
+			}
+	
                         /*stop the while loop when we reach the end of the string*/
 			if(ch==0 || ch=='\0') break;
 				 
  
                         /* FIXME: You will write this part of the function */
+			b = (!stack->size && b); 
 
 		}
 
@@ -60,6 +82,7 @@ int isBalanced(char* s)
 
 	/* FIXME: You will write this part of the function */
 
+	return b;
 }
 
 int main(int argc, char* argv[]){
