@@ -39,7 +39,7 @@ int isBalanced(char* s)
 	int b=1;  /*Boolean variable b=1 means balanced; b=0 means unbalanced string*/
 
 	DynArr *stack;
-	stack=newDynArr(100);/* initialize the stack with capacity = 100 */
+	stack=newDynArr(10);/* initialize the stack with capacity = 100 */
 
 
 	if (s && strlen(s))

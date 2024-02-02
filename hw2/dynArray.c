@@ -77,6 +77,19 @@ void deleteDynArr(DynArr *v)
 void _dynArrSetCapacity(DynArr *v, int newCap)
 {
     /* FIXME: You will write this function */
+    int i;
+    DynArr *r = (DynArr *)malloc(sizeof(DynArr));
+    assert(r != 0);
+    initDynArr(r, newCap);
+
+    for (i = 0; i < v->size; i++) {
+        r->data[i] = v->data[i];
+    }
+    
+    freeDynArr(v);
+    v->data = r->data;
+    v->size = r->size;
+    v->capacity = r->capacity;
 }
 
 /* Get the size of the dynamic array
@@ -168,6 +181,11 @@ void swapDynArr(DynArr *v, int i, int j)
 void removeAtDynArr(DynArr *v, int idx)
 {
     /* FIXME: You will write this function */
+    int i;
+    
+    for(i = idx; i < --(v->size); i++) {
+        v->data[i] = v->data[i+1];
+    }
 }
 
 /* ************************************************************************
@@ -262,5 +280,19 @@ post: size of the bag is reduced by 1
 void removeDynArr(DynArr *v, TYPE val)
 {
     /* FIXME: You will write this function */
+    int i, j;
+    j = -1;
+    for (i = 0; i < v->size; i++) {
+        if (v->data[i] == val) {
+            j = i;
+            break;
+        }
+    }
+    if (j == -1) {
+        return;
+    }
+    for (i = j; i < --(v->size); i++) {
+        v->data[i] = v->data[i+1];
+    }
 }
 

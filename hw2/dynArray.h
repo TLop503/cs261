@@ -4,7 +4,7 @@
 
 #ifndef __TYPE
 #define __TYPE
-#define TYPE char
+#define TYPE double
 #define TYPE_SIZE sizeof(TYPE)
 #endif
 
