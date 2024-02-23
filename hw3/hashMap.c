@@ -2,6 +2,7 @@
 #include "hashMap.h"
 #include "structs.h"
 #include <string.h>
+#include <stdio.h>
 
 int stringHash1(char * str)
 {
@@ -48,33 +49,33 @@ void freeMap (struct hashMap * ht)
 	}
 }
 
-void insertMap (struct hashMap * ht, KeyType k, ValueType v)
-{  /*write this*/
-	int i, flag = 0, pos = 0;
+void insertMap(struct hashMap* ht, KeyType k, ValueType v)
+{
+	int i, flag = 0;
 	struct hashLink* itr;
 
 	i = stringHash1(k) % ht->tableSize; /*find bucket data should be in*/
 	itr = ht->table[i];
 	while (itr != NULL) {
-		pos++;
-		if (itr->key == k) {
-			flag = 1;
+		if (strcmp(itr->key, k) == 0) { 
+			flag = 1;   /*match found*/
+			/*printf("Match found\n");*/
 			break;
 		}
-		itr = itr->next;		
+		itr = itr->next;
 	}
 
-	if (!flag) { /*if matching key wasn't found*/
+	if (flag) {
+		/* concurrence was found, so increment value*/
+		itr->value++;
+	}
+	else { /*if matching key wasn't found, add a new link*/
 		itr = (hashLink*)malloc(sizeof(hashLink));
-		itr->key = k;
+		itr->key = k; 
 		itr->value = v;
-		itr->next = ht->table[i];
+		itr->next = NULL;
 		ht->table[i] = itr;
 		ht->count++;
-	}
-	else {
-		/*replace node p in bucket i's value with v*/
-		itr->value = v;
 	}
 }
 

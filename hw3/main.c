@@ -16,7 +16,7 @@ int main (int argc, const char * argv[]) {
     char *tempK;
     int tableSize = 1000;
     FILE *fileptr;
-    int *occ;
+    /*int *occ;*/
     int i;
     struct timeval stop, start; /* variables for measuring execution time */
 
@@ -46,6 +46,26 @@ int main (int argc, const char * argv[]) {
         - End the loop
     */
 
+
+    /* open file*/
+    fileptr = fopen(filename, "r");
+    if (fileptr == NULL) {
+        printf("File not found\n");
+        return 0;
+    }
+
+    /* Initialize the Hash table */
+    initMap(&hashTable, tableSize);
+
+    /* read each word from the file*/
+    tempK = getWord(fileptr);
+    while (tempK != NULL) {
+        /*printf("word: %s\n", tempK);*/
+        insertMap(&hashTable, tempK, 1);
+        tempK = getWord(fileptr);
+    }
+
+
     /* Close the file */
     fclose(fileptr);
 
@@ -53,11 +73,11 @@ int main (int argc, const char * argv[]) {
     for(i=0;i < hashTable.tableSize; i++){
 	temp = hashTable.table[i];
 			
-	while(temp!=0){
-	   printf("%s:%d\n", temp->key,temp->value);
-	   temp=temp->next;
-			
-	}
+        while(temp!=0){
+        printf("%s:%d\n", temp->key,temp->value);
+        temp=temp->next;
+                
+        }
     }
 
 
@@ -69,6 +89,7 @@ int main (int argc, const char * argv[]) {
     printf("Table size = %d\n",sizeMap(&hashTable));
     printf("Table capacity = %d\n",capacityMap(&hashTable));
     printf("Table load = %f\n",tableLoad(&hashTable));
+    freeMap(&hashTable);
     return 0;
 }
 
