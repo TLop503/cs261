@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
 	/* Find the minimum-cost path in the AVL tree*/
 	len = FindMinPath(tree, pathArray);	
 	gettimeofday(&stop, NULL);
+	printf("\nYour execution time to find the mincost path is %f microseconds\n", (double) (stop.tv_usec - start.tv_usec));
 
 	/* Print out all numbers on the minimum-cost path */
 	printf("\n\nThe minimum-cost path has %d nodes printed top-down from the root to the leaf: \n", len);
@@ -57,9 +58,7 @@ int main(int argc, char** argv) {
 		printf("%d ", pathArray[i]);
 	printf("\n");
 
-	printf("\nYour execution time to find the mincost path is %f microseconds\n", (double) (stop.tv_usec - start.tv_usec));
-
-        /* Free memory allocated to the tree */
+    /* Free memory allocated to the tree */
 	deleteAVLTree(tree); 
 	
 	return 0;
@@ -83,18 +82,23 @@ int FindMinPath(struct AVLTree *tree, TYPE *path)
 			/* FIX ME */
 	/* theoretically should be all the way left or all the way left with one right at end*/
 	struct AVLnode *current = tree->root;
-	return _findMin(current, path, 0);
+	int i = 0;
+	i = _findMin(current, path, 0);
+	printf("\n\noutput: %d\n", i);
+	return i;
 
 }
 
 /* the path array isn't ever utilised and can be pruned for optimization if needed*/
-int _findMin(struct AVLnode * cur, TYPE *path, int i) {
-    
+int _findMin(struct AVLnode *cur, TYPE *path, int i) {
     int deltaL = INT_MAX;
     int deltaR = INT_MAX;
 
-    if (cur == NULL) {
-        return 0;
+	printf("\ni:%d\n", i);
+
+    if (cur == NULL || (cur->left == NULL && cur->right == NULL)) {
+        printf("returning: %d\n", i);
+		return i;
     }
 
     if (cur->left != NULL) {
@@ -105,24 +109,17 @@ int _findMin(struct AVLnode * cur, TYPE *path, int i) {
         deltaR = abs(cur->right->val - cur->val);
     }
 
-	printf("\ncleared the if trees\n");
-	printf("deltaL: %d\n", deltaL);
-	printf("left: %d\n", cur->left->val);
-	printf("deltaR: %d\n", deltaR);
-	printf("right: %d\n", cur->right->val);
-	deltaL = abs(cur->left->val - cur->val);
-	deltaR = abs(cur->right->val - cur->val);
-
-	if (deltaL <= deltaR) {
-		path[i] = deltaL;
-		printf("%d\n", deltaL);
-		return deltaL + _findMin(cur->left, path, i + 1);
-	} else {
-		path[i] = deltaR;
-		printf("%d\n", deltaR);
-		return deltaR + _findMin(cur->right, path, i + 1);
-	}
+    if (deltaL <= deltaR) {
+        path[i] = cur->left->val;
+        printf("delta: %d\n", deltaL);
+        return _findMin(cur->left, path, i + 1); 
+    } else {
+        path[i] = cur->right->val;
+        printf("%ddelta: \n", deltaR);
+        return _findMin(cur->right, path, i + 1); 
+    }
 }
+
 
 
 /* -----------------------
