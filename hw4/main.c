@@ -5,11 +5,15 @@
 #include <limits.h>
 #include "avl.h"
 
-
+#define MAX_Q 200000
 
 int FindMinPath(struct AVLTree *tree, TYPE *path);
 void printBreadthFirstTree(struct AVLTree *tree);
 int _findMin(struct AVLnode * cur, TYPE *path, int i);
+struct AVLnode** createQueue(int*, int*);
+void enQueue(struct AVLnode**, int*, struct AVLnode*);
+struct AVLnode* deQueue(struct AVLnode**, int*);
+void freeQueue(struct AVLnode** queue);
 
 /* -----------------------
 The main function
@@ -40,10 +44,10 @@ int main(int argc, char** argv) {
     printf("\nThe AVL tree has %d nodes.\n",tree->cnt);
 
 
-	/*
+	
 	printf("\nPrinting the AVL tree breadth-first : \n");
 	printBreadthFirstTree(tree);
-	*/
+	
 	printf("\n\nStarting traverse: \n");
 	gettimeofday(&start, NULL);
 
@@ -57,6 +61,9 @@ int main(int argc, char** argv) {
 	for(i = 0; i < len; i++)
 		printf("%d ", pathArray[i]);
 	printf("\n");
+
+	printf("\nThe AVL tree has %d nodes.\n",tree->cnt);
+
 
     /* Free memory allocated to the tree */
 	deleteAVLTree(tree); 
@@ -94,10 +101,10 @@ int _findMin(struct AVLnode *cur, TYPE *path, int i) {
     int deltaL = INT_MAX;
     int deltaR = INT_MAX;
 
-	printf("\ni:%d\n", i);
+	/*printf("\ni:%d\n", i);*/
 
     if (cur == NULL || (cur->left == NULL && cur->right == NULL)) {
-        printf("returning: %d\n", i);
+        /*printf("returning: %d\n", i);*/
 		return i;
     }
 
@@ -111,11 +118,11 @@ int _findMin(struct AVLnode *cur, TYPE *path, int i) {
 
     if (deltaL <= deltaR) {
         path[i] = cur->left->val;
-        printf("delta: %d\n", deltaL);
+        /*printf("delta: %d\n", deltaL);*/
         return _findMin(cur->left, path, i + 1); 
     } else {
         path[i] = cur->right->val;
-        printf("%ddelta: \n", deltaR);
+        /*printf("%ddelta: \n", deltaR);*/
         return _findMin(cur->right, path, i + 1); 
     }
 }
@@ -129,11 +136,52 @@ Printing the contents of an AVL tree in breadth-first fashion
 */
 void printBreadthFirstTree(struct AVLTree *tree)
 {
-   
-    /* FIX ME */
+	struct AVLnode *root = tree->root;
+	int front, rear;
+	struct AVLnode** queue = createQueue(&front, &rear);
+	struct AVLnode*	temp = root;
 
+	if (queue == NULL) {
+		printf("\nQueue creation failed.");
+		exit(1);
+	} 
 
+	while(temp) {
+		printf("%d ", temp->val);
+
+		/*enque left child*/
+		if (temp->left)
+			enQueue(queue, &rear, temp->left);
+		/*right child*/
+		if (temp->right)
+			enQueue(queue, &rear, temp->right);
+
+		/*dequeue front*/
+		temp = deQueue(queue, &front);
+	}
+
+	freeQueue(queue);
 }
 
+struct AVLnode** createQueue(int* front, int* rear) {
+	struct AVLnode** queue = (struct AVLnode**)malloc(sizeof(struct AVLnode*) * MAX_Q);
+	/*change q size above if things get weird*/
 
+	*front = *rear = 0;
+	return queue;
+}
 
+void enQueue(struct AVLnode** queue, int* rear, struct AVLnode* new_node) {
+	queue[*rear] = new_node;
+	(*rear)++;
+}
+
+ 
+struct AVLnode* deQueue(struct AVLnode** queue, int* front) {
+	(*front)++;
+	return queue[*front - 1];
+}
+
+void freeQueue(struct AVLnode** queue) {
+    free(queue);
+}
