@@ -43,7 +43,6 @@ int main(int argc, char** argv) {
 	fclose(file);
     printf("\nThe AVL tree has %d nodes.\n",tree->cnt);
 
-
 	
 	printf("\nPrinting the AVL tree breadth-first : \n");
 	printBreadthFirstTree(tree);
