@@ -1,0 +1,12 @@
+3	do assignment 7
+
+0	take a nap
+
+3	do assignment 7
+
+1	study heap-based priority queue
+
+1	test 1
+2	test 2
+101	review trees for Midterm 2
+
