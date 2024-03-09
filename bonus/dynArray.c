@@ -280,34 +280,21 @@ TYPE getMinHeap(DynArr *heap)
 void addHeap(DynArr *heap, TYPE node)
 {
 
+
 	int pos, pidx;
 	TYPE parentVal;
   	/* FIXME */
 	assert(heap);
 
+
 	/* if neccessary, doble size*/
 	if (heap->size >= heap->capacity)
 		_dynArrSetCapacity(heap, 2 * heap->capacity);
 
-	pos = heap->size;	/* this is the next open spot*/
-	pidx = (pos - 1) / 2; /* index of parent (middle(ish) of heap)*/
-
-	if (pidx >= 0)	/*not really sure when this could be false*/
-		parentVal = heap->data[pidx];	/*if there are at least 1 values in the heap the parent data is at pidx*/
-
-	/* percolation*/
-	while (pos > 0 && compare(node, parentVal)) {
-		heap->data[pos] = parentVal;	/*move parent down to last empty spot*/
-		pos = pidx;	/*move up one level to parent index*/
-		pidx = (pos - 1) / 2;	/*find new parent index*/
-		
-		if (pidx >= 0)	/*not really sure when this could be false*/
-			parentVal = heap->data[pidx];	/*update parent*/
-	}
-
-	heap->data[pos] = node;	/*insert node at new last empty spot*/
+	heap->data[heap->size] = node;	/*add node to end of array*/
 	heap->size++;	/*increment size*/
 
+	_adjustHeap(heap, heap->size, 0);	/*adjust heap to maintain heap property*/
 
 }
 
@@ -328,7 +315,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 	leftChild = 2 * pos + 1;	/*left child index*/
 	rightChild = 2 * pos + 2;	/*right child index*/
 
-	if (rightChild < heap->size + 1) {
+	if (rightChild < heap->size) {
 		/* swap if the smaller child b/c there are 2 children*/
 		smallIdx = _smallerIndexHeap(heap, leftChild, rightChild);	/* determine which child is smaller*/
 
@@ -337,7 +324,7 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 			_adjustHeap(heap, max, smallIdx);
 		}
 	}
-	else if (leftChild < heap->size + 1) {
+	else if (leftChild < heap->size) {
 		/* only left child exists, swap if needed*/
 		if(compare(heap->data[leftChild], heap->data[pos]) == -1) { /*swap if needed*/
 			swapDynArr(heap, pos, leftChild);

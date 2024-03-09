@@ -56,13 +56,14 @@ void saveList(DynArr *heap, FILE *filePtr)
 */
 void loadList(DynArr *heap, FILE *filePtr)
 {
-  	/* FIX ME */
-	while (!feof(filePtr)) {
-		TYPE newTask;	/* create new task*/
-		fscanf(filePtr, "%d\t", &newTask.priority); /*read priority and tab*/
-		fgets(newTask.description, TASK_DESC_SIZE, filePtr); /*read desc*/
-		addHeap(heap, newTask); /* add to heap*/
-	}
+    TYPE newTask; /* create new task */
+
+    /* read priority and tab, and read desc */
+    while (fscanf(filePtr, "%d\t", &newTask.priority) == 1 && fgets(newTask.description, TASK_DESC_SIZE, filePtr) != NULL) {
+        /* remove newline character from description */
+        newTask.description[strcspn(newTask.description, "\n")] = 0;
+        addHeap(heap, newTask); /* add to heap */
+    }
 }
 
 /*  Print the list
@@ -74,7 +75,19 @@ void loadList(DynArr *heap, FILE *filePtr)
 */
 void printList(DynArr *heap)
 {
-  	/* FIX ME  */
+	/* note this is rly insecure b/c a user could input their own formatting icons as to-do list
+	items and use those to stack-smash, but I digress*/
+
+
+	DynArr tempHeap;
+	initDynArr(&tempHeap, heap->capacity);
+	copyDynArr(heap, &tempHeap);
+
+	while (sizeDynArr(&tempHeap) > 0) {
+		TYPE temp = getMinHeap(&tempHeap);
+		printf("%d\t%s\n", temp.priority, temp.description);
+		removeMinHeap(&tempHeap);
+	}
 }
 
 /*  Compare two tasks by priority
