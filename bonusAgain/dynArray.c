@@ -406,3 +406,12 @@ void _buildHeap(DynArr *heap)
         _adjustHeap(heap, maxpos, i);
     }
 }
+
+void sortHeap(DynArr *heap) {
+	int i;
+	_buildHeap(heap);
+	for (i = heap->size - 1; i > 0; i--) {
+		swapDynArr(heap, 0, i);
+		_adjustHeap(heap, i - 1, 0);
+	}
+}
