@@ -6,7 +6,7 @@
 /* ************************************************************************
 	Dynamic Array Functions
 ************************************************************************ */
-
+void _buildHeap(DynArr *heap);
 /* Initialize (including allocation of data array) dynamic array.
 
 	param: 	v		pointer to the dynamic array
@@ -281,6 +281,7 @@ TYPE getMinHeap(DynArr *heap)
 void addHeap(DynArr *heap, TYPE node)
 {
   	/* FIXME */
+	/*
 	int idx;
 	int parentIdx;
 	TYPE parentVal;
@@ -290,12 +291,12 @@ void addHeap(DynArr *heap, TYPE node)
 	}
 
 	idx = sizeDynArr(heap);
-	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back*/
+	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back
 	if (parentIdx >= 0) {
 		parentVal = heap->data[parentIdx];
 	}
 
-	/* percolate to prep data and find index for new value*/
+	/* percolate to prep data and find index for new value
 	while (idx > 0 && compare(node, parentVal) == -1) {
 		putDynArr(heap, idx, parentVal);
 		idx = parentIdx;
@@ -307,6 +308,14 @@ void addHeap(DynArr *heap, TYPE node)
 	}
 	heap->data[idx] = node;
 	heap->size++;
+	*/
+	if (heap->size >= heap->capacity) {
+		_dynArrSetCapacity(heap, 2 * heap->capacity);
+	}
+	addDynArr(heap, node);
+	/* call heapify*/
+	_buildHeap(heap);
+
 }
 
 /*	Adjust heap to maintain heap property
