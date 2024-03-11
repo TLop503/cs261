@@ -265,7 +265,9 @@ int _smallerIndexHeap(DynArr *heap, int i, int j)
 TYPE getMinHeap(DynArr *heap)
 {
   	/* FIXME */
+	/* SHOULD work without flaw*/
   	TYPE temp;
+	temp = heap->data[0];
   	return temp;
 }
 
@@ -279,6 +281,21 @@ TYPE getMinHeap(DynArr *heap)
 void addHeap(DynArr *heap, TYPE node)
 {
   	/* FIXME */
+	int idx;
+	int parentIdx;
+	TYPE parentVal;
+
+	addDynArr(heap, node);
+	idx = sizeDynArr(heap) - 1;
+	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back*/
+	parentVal = heap->data[parentIdx];
+
+	while (idx > 0 && compare(node, parentVal) == -1) {
+		putDynArr(heap, idx, parentVal);
+		idx = parentIdx;
+		parentIdx = (idx - 1) / 2;
+		parentVal = getDynArr(heap, parentIdx);
+	}
 }
 
 /*	Adjust heap to maintain heap property
@@ -292,6 +309,31 @@ void addHeap(DynArr *heap, TYPE node)
 void _adjustHeap(DynArr *heap, int max, int pos)
 {
   	/* FIXME */
+
+	/* left, right, are children of pos*/
+	int leftIdx;
+	int rightIdx;
+	int minIdx;
+
+	leftIdx = 2 * pos + 1;
+	rightIdx = 2 * pos + 2;
+
+	if (rightIdx <= max) {
+		minIdx = _smallerIndexHeap(heap, leftIdx, rightIdx);
+
+		/*if we need to swap*/
+		if (compare(getDynArr(heap, minIdx), getDynArr(heap, pos)) == -1) {
+			swapDynArr(heap, minIdx, pos);
+			_adjustHeap(heap, max, minIdx);
+		}
+	}
+	else if (leftIdx <= max) {
+		if (compare(getDynArr(heap, leftIdx), getDynArr(heap, pos)) == -1) {
+			swapDynArr(heap, leftIdx, pos);
+			_adjustHeap(heap, max, leftIdx);
+		}
+	}
+
 }
 
 /*	Remove the first node, which has the max priority (i.e., min value), 
@@ -304,6 +346,10 @@ void _adjustHeap(DynArr *heap, int max, int pos)
 void removeMinHeap(DynArr *heap)
 {
   	/* FIXME */
+	heap->data[0] = getDynArr(heap, sizeDynArr(heap) - 1);
+	heap->size--;
+	_adjustHeap(heap, sizeDynArr(heap) - 1, 0);
+	/* -1 b/c we know last is good? need to check...*/
 }
 
 void _heapify(DynArr *input, int size, int i) {
@@ -329,4 +375,14 @@ void _heapify(DynArr *input, int size, int i) {
 	if (lgst != i) {
 		_heapify(input, size, lgst);
 	}
+}
+
+void _buildHeap(DynArr *heap)
+{
+    int maxpos = heap->size - 1;
+    int i;
+
+    for(i = (maxpos - 1) / 2; i >= 0; i--){
+        _adjustHeap(heap, maxpos, i);
+    }
 }
