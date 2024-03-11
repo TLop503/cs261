@@ -291,12 +291,12 @@ void addHeap(DynArr *heap, TYPE node)
 	}
 
 	idx = sizeDynArr(heap);
-	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back
+	parentIdx = (idx - 1) / 2; b/c the new node is the child of the node this far back
 	if (parentIdx >= 0) {
 		parentVal = heap->data[parentIdx];
 	}
 
-	/* percolate to prep data and find index for new value
+	percolate to prep data and find index for new value
 	while (idx > 0 && compare(node, parentVal) == -1) {
 		putDynArr(heap, idx, parentVal);
 		idx = parentIdx;

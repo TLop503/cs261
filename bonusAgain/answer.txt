@@ -1,0 +1,7 @@
+0	take a nap
+3	do assignment 7
+1	study heap-based priority queue
+101	review trees for Midterm 2
+21	example
+21	another example
+4	finally catch up on sleep
