@@ -38,6 +38,10 @@ TYPE createTask (int priority, char *desc)
 void saveList(DynArr *heap, FILE *filePtr)
 {
   	/* FIX ME */
+	int i;
+	for (i = 0; i < heap->size; i++) {
+		fprintf(filePtr, "%d\t%s\n", heap->data[i].priority, heap->data[i].description);
+	}
 }
 
 /*  Load the list from a file
@@ -51,6 +55,15 @@ void saveList(DynArr *heap, FILE *filePtr)
 void loadList(DynArr *heap, FILE *filePtr)
 {
   	/* FIX ME */
+	char line[TASK_DESC_SIZE];
+	int priority;
+	char desc[TASK_DESC_SIZE];
+
+	while(fgets(line, sizeof(line), filePtr) != NULL) {
+		sscanf(line, "%d\t%[^\n]", &priority, desc);
+		TYPE newTask = createTask(priority, desc);
+		addHeap(heap, newTask);
+	}
 }
 
 /*  Print the list
@@ -63,6 +76,16 @@ void loadList(DynArr *heap, FILE *filePtr)
 void printList(DynArr *heap)
 {
   	/* FIX ME  */
+	TYPE task;
+	DynArr *temp = newDynArr(heap->size);
+	copyDynArr(heap, temp);
+	
+	while (sizeDynArr(temp) > 0) {
+		task = getMinHeap(temp);
+		printf("%d\t%s\n", task.priority, task.description);
+		removeMinHeap(temp);
+	}
+	deleteDynArr(temp);
 }
 
 /*  Compare two tasks by priority

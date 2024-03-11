@@ -285,17 +285,28 @@ void addHeap(DynArr *heap, TYPE node)
 	int parentIdx;
 	TYPE parentVal;
 
-	addDynArr(heap, node);
-	idx = sizeDynArr(heap) - 1;
-	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back*/
-	parentVal = heap->data[parentIdx];
+	if (heap->size >= heap->capacity) {
+		_dynArrSetCapacity(heap, 2 * heap->capacity);
+	}
 
+	idx = sizeDynArr(heap);
+	parentIdx = (idx - 1) / 2; /* b/c the new node is the child of the node this far back*/
+	if (parentIdx >= 0) {
+		parentVal = heap->data[parentIdx];
+	}
+
+	/* percolate to prep data and find index for new value*/
 	while (idx > 0 && compare(node, parentVal) == -1) {
 		putDynArr(heap, idx, parentVal);
 		idx = parentIdx;
 		parentIdx = (idx - 1) / 2;
 		parentVal = getDynArr(heap, parentIdx);
+		if (parentIdx >= 0) {
+			parentVal = heap->data[parentIdx];
+		}
 	}
+	heap->data[idx] = node;
+	heap->size++;
 }
 
 /*	Adjust heap to maintain heap property
