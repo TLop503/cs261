@@ -7,6 +7,8 @@
 	Dynamic Array Functions
 ************************************************************************ */
 
+void _buildHeap(DynArr *heap, int size, int root);
+
 /* Initialize (including allocation of data array) dynamic array.
 
 	param: 	v		pointer to the dynamic array
@@ -280,9 +282,10 @@ TYPE getMinHeap(DynArr *heap)
 void addHeap(DynArr *heap, TYPE node)
 {
 
-
+	/*
 	int pos, pidx;
 	TYPE parentVal;
+	*/
   	/* FIXME */
 	assert(heap);
 
@@ -354,4 +357,42 @@ void removeMinHeap(DynArr *heap)
 	_adjustHeap(heap, heap->size, 0);	/*adjust heap to maintain heap property*/
 }
 
+void sortHeap(DynArr *input){
+	int i;
 
+	/* build heap*/
+	for(i = input->size / 2 - 1; i >= 0; i--) {
+		_buildHeap(input, input->size, i);
+	}
+
+	/* sort heap*/
+	for(i = input->size - 1; i >= 0; i--) {
+		swapDynArr(input, 0, i);
+		_buildHeap(input, i, 0);
+	}
+
+}
+
+void _buildHeap(DynArr *heap, int size, int i) {
+    /* i = root location*/
+    int largest, left, right;
+    largest = i;
+    left = 2 * i + 1;
+    right = 2 * i + 2;
+
+    /* if left child is larger than root*/
+    if (left < size && compare(getDynArr(heap, left), getDynArr(heap, largest)) == 1) {
+        largest = left;
+    }
+
+    /*if right child is larger than largest so far*/
+    if (right < size && compare(getDynArr(heap, right), getDynArr(heap, largest)) == 1) {
+        largest = right;
+    }
+
+    /*if largest is not root we haven't fully traversed, so recurse*/
+    if (largest != i) {
+        swapDynArr(heap, i, largest);
+        _buildHeap(heap, size, largest);
+    }
+}

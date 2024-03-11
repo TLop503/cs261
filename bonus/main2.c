@@ -4,7 +4,7 @@
 #include <string.h>
 #include "toDoList.h"
 
-int main2 (int argc, const char * argv[])
+int main (int argc, const char * argv[])
 {
   	TYPE task1, task2, task3, task4, task5, task6, task7, task8, task9, task10;
 	DynArr mainList;
@@ -36,6 +36,7 @@ int main2 (int argc, const char * argv[])
 	addDynArr(&mainList, task10);
 
 	/* sort tasks */
+	printf("Attempting to sort tasks...\n");
 	sortHeap(&mainList);
 
 	/* print sorted tasks from the dynamic array */
